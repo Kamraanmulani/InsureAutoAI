@@ -1,1015 +1,578 @@
-# 🛡️ Insurance Claim Validator
+# 🚗 InsureAutoAI: Autonomous Vehicle Insurance Claim Intelligence Platform
 
-An AI-powered insurance claim validation system that uses computer vision and large language models to automatically analyze, validate, and detect fraud in vehicle damage claims.
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-18+-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![YOLOv10](https://img.shields.io/badge/YOLOv10-Ultralytics-00599C?style=for-the-badge)](https://github.com/ultralytics/ultralytics)
+[![LLaVA 13B](https://img.shields.io/badge/LLaVA-13B%20VLM-FF6F00?style=for-the-badge)](https://ollama.com/library/llava)
+[![Qdrant](https://img.shields.io/badge/Qdrant-Vector%20DB-DC2626?style=for-the-badge&logo=qdrant&logoColor=white)](https://qdrant.tech/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Database-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Docker](https://img.shields.io/badge/Docker-Compatible-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green.svg)](https://fastapi.tiangolo.com/)
-[![Docker](https://img.shields.io/badge/Docker-Compatible-blue.svg)](https://www.docker.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+An enterprise-grade, end-to-end multimodal AI platform that automates vehicle damage claim adjudication using computer vision, walk-around video keyframe extraction, Vision-Language Models (VLMs), and multi-layer fraud detection.
 
 ---
 
 ## 📋 Table of Contents
 
-- [Overview](#-overview)
-- [Features](#-features)
+- [Overview & Value Proposition](#-overview--value-proposition)
+- [Key Features](#-key-features)
 - [System Architecture](#-system-architecture)
-- [Project Structure](#-project-structure)
-- [Prerequisites](#-prerequisites)
-- [Installation](#-installation)
-- [Running the Project](#-running-the-project)
-  - [Option 1: Docker Compose (Recommended)](#option-1-docker-compose-recommended)
-  - [Option 2: Manual Setup](#option-2-manual-setup)
-- [API Documentation](#-api-documentation)
-- [Configuration](#-configuration)
-- [Testing](#-testing)
+  - [Full-Stack Architecture Diagram](#full-stack-architecture-diagram)
+  - [Multimodal Video & Image Processing Pipeline](#multimodal-video--image-processing-pipeline)
+  - [End-to-End Sequence Flow](#end-to-end-sequence-flow)
+- [Repository Structure](#-repository-structure)
+- [Core AI/ML Capabilities](#-core-aiml-capabilities)
+  - [1. Walk-Around Video Keyframe Decimation & Blur Filtering](#1-walk-around-video-keyframe-decimation--blur-filtering)
+  - [2. YOLOv10 Damage Detection & Localization](#2-yolov10-damage-detection--localization)
+  - [3. LLaVA 13B Visual Reasoning Engine](#3-llava-13b-visual-reasoning-engine)
+  - [4. Multi-Layer Fraud Detection Engine](#4-multi-layer-fraud-detection-engine)
+  - [5. Automated Decision & Scoring Engine](#5-automated-decision--scoring-engine)
 - [Technology Stack](#-technology-stack)
-- [Performance](#-performance)
-- [Troubleshooting](#-troubleshooting)
+- [Prerequisites & System Requirements](#-prerequisites--system-requirements)
+- [Getting Started](#-getting-started)
+  - [Option 1: Docker Compose (All-in-One)](#option-1-docker-compose-all-in-one)
+  - [Option 2: Local Multi-Service Development](#option-2-local-multi-service-development)
+- [API Reference](#-api-reference)
+  - [FastAPI ML Service (`:8000`)](#fastapi-ml-service-8000)
+  - [Express Backend Gateway (`:5000`)](#express-backend-gateway-5000)
+- [Environment Configuration](#-environment-configuration)
+- [Troubleshooting & FAQ](#-troubleshooting--faq)
 - [Contributing](#-contributing)
 - [License](#-license)
 
 ---
 
-## 🎯 Overview
+## 🎯 Overview & Value Proposition
 
-The Insurance Claim Validator is an end-to-end machine learning system designed to automate the validation of insurance claims through intelligent image analysis. The system combines multiple AI models and fraud detection techniques to provide accurate, fast, and reliable claim assessments.
+Traditional motor claim verification requires days of manual physical inspections, back-and-forth documentation, and manual fraud screening, leading to high administrative overhead and exposure to fraudulent claims.
 
-### Key Capabilities
-
-- **Automated Damage Detection**: Uses YOLOv10 to identify and locate vehicle damage
-- **Intelligent Damage Analysis**: Leverages LLaVA vision-language model for detailed damage assessment
-- **Fraud Detection**: Multi-layer fraud detection including duplicate image detection, metadata analysis, and consistency checks
-- **Automated Decision Making**: Smart scoring engine that generates actionable recommendations (APPROVE/REJECT/MANUAL_REVIEW)
-- **Real-time Processing**: Fast API-based architecture for instant claim analysis
+**InsureAutoAI** transforms this workflow into an automated, transparent, and instantaneous process:
+1. **Walk-Around Video & Photo Evidence**: Claimants record a continuous walk-around video or high-resolution photos of vehicle damage.
+2. **Quality-Aware Ingestion**: OpenCV isolates the sharpest, damage-relevant frames while eliminating camera shake, blur, and lighting distortions using Laplacian variance filtering.
+3. **Dual-Model Computer Vision**:
+   - **YOLOv10** pinpoints exact damage classes (dents, scratches, cracks, shattered glass, structural crumpling) with bounding box coordinates.
+   - **LLaVA 13B** provides deep multi-modal reasoning: severity classification, repair vs. replacement recommendations, and labor/parts cost estimations.
+4. **Zero-Trust Fraud Shield**: Perceptual image hashing, EXIF metadata tampering checks, and Qdrant dense vector embeddings prevent recycled internet photos or staged repeat claims.
+5. **Explainable Adjudication**: Synthesizes a transparent score resulting in instantaneous **APPROVE**, **MANUAL REVIEW**, or **REJECT** decisions.
 
 ---
 
-## ✨ Features
+## ✨ Key Features
 
-### Core Features
-
-- 🔍 **Object Detection**: YOLOv10-based damage detection with bounding box annotations
-- 🤖 **Vision-Language Analysis**: LLaVA 13B model for detailed damage descriptions
-- 🚨 **Fraud Detection System**:
-  - Duplicate image detection using perceptual hashing and vector similarity
-  - EXIF metadata validation and tampering detection
-  - Consistency analysis between claim description and detected damage
-- 📊 **Intelligent Scoring Engine**: Multi-factor scoring with weighted criteria
-- 🎯 **Automated Recommendations**: Business rule-based decision making
-- 📝 **Comprehensive Reports**: Human-readable explanations for every decision
-- 🖼️ **Image Preprocessing**: Automatic image enhancement and normalization
-- 💾 **Vector Database Integration**: Qdrant for efficient duplicate detection
-- 🔄 **RESTful API**: FastAPI-based endpoints with automatic documentation
-
-### Advanced Features
-
-- Health monitoring and status checks
-- Persistent claim history storage
-- Annotated image generation
-- Batch processing capabilities
-- Extensible plugin architecture
+- 🎥 **Walk-Around Video Inspection**: Seamlessly processes video files (`.mp4`, `.mov`, `.avi`, `.webm`), dynamically extracts keyframes, and aggregates multi-angle evidence into a single claim file.
+- 📸 **High-Resolution Photo Adjudication**: Single- and multi-image processing with EXIF metadata parsing (GPS coordinate consistency, camera signature, timestamp cross-referencing).
+- 🧠 **Dual AI Architecture**: High-speed object localization with YOLOv10 alongside semantic reasoning with LLaVA 13B.
+- 🛡️ **Vector & Perceptual Fraud Prevention**:
+  - Qdrant vector database similarity detection flags previously submitted vehicle photos across the entire claim history.
+  - Perceptual hashing (`dhash`, `phash`, `whash`) detects modified, cropped, or filtered images.
+  - EXIF temporal validation cross-references image capture timestamps with the reported incident time.
+- ⚖️ **Weighted Scoring Engine**: Computes transparent confidence and fraud risk metrics with actionable breakdowns for claim adjusters.
+- 📊 **Executive & Adjuster Dashboard**: Interactive React frontend with status breakdown, severity categorization, annotated bounding box visualization, and repair cost estimations.
+- 🔐 **Secure Role-Based Backend**: Node.js/Express API gateway with JWT authentication, MongoDB claim history persistence, and robust multi-part streaming.
 
 ---
 
 ## 🏗️ System Architecture
 
+### Full-Stack Architecture Diagram
+
 ```mermaid
-graph TB
-    subgraph "Client Layer"
-        A1[Web Client]
-        A2[Mobile App]
-        A3[Postman]
-        A4[cURL/Scripts]
+flowchart TD
+    subgraph ClientLayer ["Client & Interface Layer"]
+        UI["React 18 Single Page Application<br/>Tailwind CSS + Lucide Icons"]
+        Mobile["Mobile Web / Adjuster Portal"]
     end
 
-    subgraph "API Gateway"
-        B[FastAPI Application<br/>Port 8000]
+    subgraph GatewayLayer ["Backend API Gateway (Port 5000)"]
+        Express["Node.js / Express Server"]
+        AuthMiddleware["JWT Authentication & RBAC"]
+        Multer["Multer Streaming Parser (Up to 50MB)"]
+        ClaimController["Claim Lifecycle Controller"]
     end
 
-    subgraph "Processing Pipeline"
-        C[Preprocessing Service]
-        D[Detection Service]
-        E[Scoring Engine]
+    subgraph MLLayer ["ML & Vision Inference Engine (Port 8000)"]
+        FastAPI["FastAPI High-Performance Engine"]
+        VideoEngine["Video Ingestion & Keyframe Extractor<br/>Laplacian Blur Filter"]
+        Preprocess["EXIF Parser & Image Normalizer"]
+        
+        subgraph VisionModels ["AI Model Ensemble"]
+            YOLO["YOLOv10 Damage Detector<br/>Bounding Boxes & Damage Class"]
+            LLaVA["LLaVA 13B VLM (via Ollama)<br/>Semantic Severity & Cost Estimation"]
+            FraudEngine["Fraud Detection Engine<br/>pHash + dHash + Vector Check"]
+        end
+        
+        ScoringEngine["Unified Scoring Engine<br/>Rules & Confidence Matrix"]
     end
 
-    subgraph "AI Models"
-        F1[YOLOv10<br/>Object Detection]
-        F2[LLaVA 13B<br/>Vision-Language Model]
-        F3[Fraud Detector<br/>Multi-layer Analysis]
+    subgraph StorageLayer ["Data & Vector Storage"]
+        Mongo[("MongoDB<br/>Claims & User Records<br/>Port 27017")]
+        Qdrant[("Qdrant Vector DB<br/>Visual Fingerprints & Embeddings<br/>Port 6333")]
+        FileStore[("Local / Cloud Storage<br/>Raw Videos, Keyframes, Bounding Boxes")]
     end
 
-    subgraph "Data Services"
-        G1[Qdrant Vector DB<br/>Port 6333]
-        G2[MongoDB<br/>Port 27017]
-        G3[File Storage<br/>Uploads & Processed]
-    end
+    UI -->|"HTTP / REST API"| Express
+    Mobile -->|"HTTP / REST API"| Express
 
-    subgraph "External Services"
-        H[Ollama<br/>LLaVA Runtime<br/>Port 11434]
-    end
+    Express --> AuthMiddleware
+    AuthMiddleware --> Multer
+    Multer --> ClaimController
 
-    A1 --> B
-    A2 --> B
-    A3 --> B
-    A4 --> B
+    ClaimController -->|"Persist Claim State"| Mongo
+    ClaimController -->|"Forward Media Payload"| FastAPI
 
-    B --> C
-    C --> D
-    D --> E
+    FastAPI --> VideoEngine
+    FastAPI --> Preprocess
 
-    D --> F1
-    D --> F2
-    D --> F3
+    VideoEngine -->|"Filtered Sharp Frames"| YOLO
+    Preprocess -->|"Normalized Image"| YOLO
+    
+    YOLO -->|"Detections & Cropped ROIs"| LLaVA
+    Preprocess -->|"Image Fingerprint & Metadata"| FraudEngine
+    
+    FraudEngine -->|"Query Visual Neighbors"| Qdrant
+    VisionModels --> ScoringEngine
 
-    F2 --> H
-    F3 --> G1
-    E --> G2
-    C --> G3
-
-    style A1 color:#000
-    style A2 color:#000
-    style A3 color:#000
-    style A4 color:#000
-    style B color:#000
-    style C color:#000
-    style D color:#000
-    style E color:#000
-    style F1 color:#000
-    style F2 color:#000
-    style F3 color:#000
-    style G1 color:#000
-    style G2 color:#000
-    style G3 color:#000
-    style H color:#000
+    ScoringEngine -->|"Decision Report"| FastAPI
+    FastAPI -->|"Consolidated Result"| ClaimController
+    FastAPI -->|"Save Annotated Artifacts"| FileStore
 ```
 
-### Data Flow Architecture
+---
+
+### Multimodal Video & Image Processing Pipeline
+
+```mermaid
+flowchart LR
+    A["Raw Media Input<br/>(Video / Photo)"] --> B{"Input Type?"}
+    
+    B -->|"Walk-Around Video"| C["Temporal Frame Decimation<br/>Extract 1 frame / sec"]
+    C --> D["Laplacian Blur Filter<br/>Reject Variance < Threshold"]
+    D --> E["Keyframe Quality Selection<br/>Top N Sharpest Frames"]
+    
+    B -->|"Static Image"| F["EXIF Extraction & Validation<br/>GPS, Device, Timestamps"]
+    
+    E --> G["YOLOv10 Damage Detector"]
+    F --> G
+    
+    G --> H["Localized Bounding Boxes<br/>Dents, Scratches, Glass Cracks"]
+    
+    H --> I["LLaVA 13B Multi-Modal VLM"]
+    I --> J["Severity & Repair Estimates"]
+    
+    F --> K["Perceptual Hashing & Qdrant Search"]
+    K --> L["Duplicate Image & Fraud Check"]
+    
+    J --> M["Multi-Factor Scoring Engine"]
+    L --> M
+    
+    M --> N{"Decision Threshold"}
+    N -->|"Fraud < 3.0 & High Consistency"| O["APPROVE"]
+    N -->|"Moderate Risk or Ambiguity"| P["MANUAL REVIEW"]
+    N -->|"Fraud > 7.0 or Tampering"| Q["REJECT"]
+```
+
+---
+
+### End-to-End Sequence Flow
 
 ```mermaid
 sequenceDiagram
-    participant C as Client
-    participant API as FastAPI
-    participant PP as Preprocessing
-    participant DS as Detection Service
-    participant YL as YOLO Model
-    participant LV as LLaVA Model
-    participant FD as Fraud Detector
-    participant QD as Qdrant DB
-    participant SE as Scoring Engine
+    autonumber
+    actor User as Claimant / Adjuster
+    participant Web as React Dashboard
+    participant API as Express Gateway (:5000)
+    participant ML as FastAPI Engine (:8000)
+    participant Video as Video Processor
+    participant AI as YOLOv10 & LLaVA 13B
+    participant DB as MongoDB & Qdrant
 
-    C->>API: POST /api/analyze-claim
-    API->>PP: Extract metadata & preprocess
-    PP->>API: Metadata + processed image
+    User->>Web: Uploads walk-around video & incident details
+    Web->>API: POST /api/claims/analyze (multipart/form-data)
+    API->>API: Validate session & stream file
+    API->>ML: POST /api/analyze-claim-video
     
-    API->>DS: Run complete analysis
-    DS->>YL: Detect damage objects
-    YL->>DS: Bounding boxes + labels
+    activate ML
+    ML->>Video: Deconstruct video & discard motion-blurred frames
+    Video-->>ML: Return ranked high-clarity keyframes
     
-    DS->>LV: Analyze damage details
-    LV->>DS: Damage description
+    ML->>AI: Batched YOLOv10 inference across keyframes
+    AI-->>ML: Detected components, bounding boxes, damage types
     
-    DS->>FD: Check fraud indicators
-    FD->>QD: Search similar images
-    QD->>FD: Similarity results
-    FD->>DS: Fraud scores
+    ML->>AI: Prompt LLaVA 13B with key damage crops
+    AI-->>ML: Detailed narrative, severity level, estimated cost
     
-    DS->>API: Analysis results
-    API->>SE: Generate recommendation
-    SE->>API: Final decision + report
-    API->>C: Complete analysis response
+    ML->>DB: Check perceptual hash & Qdrant vector similarity
+    DB-->>ML: Duplicate distance & match history
+    
+    ML->>ML: Run Scoring Engine (Metadata + Duplicate + Consistency)
+    ML-->>API: Unified JSON response with verdict & annotated artifacts
+    deactivate ML
+
+    API->>DB: Store claim record, decision, and audit log
+    API-->>Web: Return claim summary & inspection breakdown
+    Web-->>User: Displays real-time result (Approve / Review / Reject)
 ```
 
 ---
 
-## 📁 Project Structure
+## 📁 Repository Structure
 
 ```
-insurance-claim-validator/
-├── 📄 README.md                          # This file
-├── 📄 ARCHITECTURE.md                    # Detailed architecture documentation
-├── 📄 IMPLEMENTATION_SUMMARY.md          # Implementation notes
-├── 📄 DOCKER_SETUP.md                    # Docker deployment guide
-├── 📄 QUICK_REFERENCE.md                 # Quick command reference
-├── 🐳 docker-compose.yml                 # Docker orchestration
+InsureAutoAI/
+├── .env.template                     # Template with environment variables for all services
+├── .gitignore                        # Global ignore rules (ignoring test artifacts & model weights)
+├── docker-compose.yml                # Multi-container orchestration (FastAPI, Qdrant, MongoDB)
+├── README.md                         # Main repository architecture and documentation
 │
-├── ml-backend/                           # Main application directory
-│   ├── 📄 Dockerfile                     # Container definition
-│   ├── 📄 requirements.txt               # Python dependencies
-│   ├── 📄 requirements_gpu.txt           # GPU-accelerated dependencies
-│   ├── 📄 download_models.py             # Model download script
-│   ├── 📄 yolov10m.pt                    # YOLOv10 model weights
-│   │
-│   ├── app/                              # FastAPI application
-│   │   ├── 📄 __init__.py
-│   │   ├── 📄 main.py                    # API entry point & routes
-│   │   │
-│   │   ├── api/                          # API layer
-│   │   │   └── 📄 routes.py              # Additional route handlers
-│   │   │
-│   │   ├── models/                       # AI Model wrappers
-│   │   │   ├── 📄 yolo_detector.py       # YOLO detection model
-│   │   │   ├── 📄 llava_analyzer.py      # LLaVA analysis model
-│   │   │   └── 📄 fraud_detector.py      # Fraud detection system
-│   │   │
-│   │   ├── services/                     # Business logic services
-│   │   │   ├── 📄 preprocessing.py       # Image preprocessing & metadata
-│   │   │   ├── 📄 detection_service.py   # Damage detection orchestration
-│   │   │   ├── 📄 scoring_engine.py      # Decision & scoring engine
-│   │   │   └── 📄 metadata_extractor.py  # EXIF & metadata extraction
-│   │   │
-│   │   └── utils/                        # Utility functions
-│   │       ├── 📄 image_utils.py         # Image processing utilities
-│   │       └── 📄 prompt_templates.py    # LLaVA prompt templates
-│   │
-│   ├── data/                             # Data storage
-│   │   ├── uploads/                      # Uploaded claim images
-│   │   │   ├── processed/                # Processed images
-│   │   │   └── annotated/                # Annotated detection images
-│   │   ├── qdrant_storage/               # Vector database storage
-│   │   ├── model_offload/                # Model cache directory
-│   │   └── image_hashes.json             # Perceptual hash database
-│   │
-│   ├── test_images/                      # Sample test images
-│   │
-│   └── tests/                            # Test scripts
-│       ├── 📄 test_complete_pipeline.py  # End-to-end tests
-│       ├── 📄 test_detection.py          # YOLO tests
-│       ├── 📄 test_fraud_detection.py    # Fraud detection tests
-│       ├── 📄 test_preprocessing.py      # Preprocessing tests
-│       └── 📄 FullTest1to5.py            # Comprehensive test suite
+├── frontend/                         # React 18 Web Application
+│   ├── package.json                  # Frontend dependencies and build scripts
+│   ├── tailwind.config.js            # Tailwind CSS configuration
+│   ├── postcss.config.js             # PostCSS plugins
+│   ├── public/                       # Static public assets, index.html, and favicons
+│   └── src/
+│       ├── App.js                    # Router setup (Dashboard, Claim Submission, Claim Detail)
+│       ├── App.css                   # Global layout styling
+│       ├── index.js                  # React DOM entry point
+│       ├── components/
+│       │   ├── ClaimSubmission.jsx   # Walk-around video and photo claim upload form
+│       │   ├── ClaimsDashboard.jsx   # Claims overview, metrics, and filterable table
+│       │   └── ClaimDetail.jsx       # In-depth claim analysis, keyframe gallery & fraud report
+│       └── services/
+│           └── api.js                # Axios HTTP client connecting to backend gateway
 │
-└── venv_gpu/                             # Virtual environment (not in repo)
-```
-
-### Component Descriptions
-
-#### **Core Application (`app/`)**
-
-- **`main.py`**: FastAPI application entry point with all API endpoints
-- **`models/`**: AI model wrapper classes for YOLO, LLaVA, and fraud detection
-- **`services/`**: Business logic layer handling preprocessing, detection, and scoring
-- **`utils/`**: Helper functions for image processing and prompt engineering
-
-#### **Services Layer**
-
-1. **Preprocessing Service** (`preprocessing.py`)
-   - Image validation and normalization
-   - EXIF metadata extraction
-   - GPS and timestamp validation
-   - Image quality enhancement
-
-2. **Detection Service** (`detection_service.py`)
-   - Orchestrates YOLO object detection
-   - Manages LLaVA damage analysis
-   - Coordinates fraud detection checks
-   - Consolidates results
-
-3. **Scoring Engine** (`scoring_engine.py`)
-   - Multi-factor fraud scoring
-   - Consistency analysis
-   - Business rule application
-   - Decision recommendation generation
-
-#### **AI Models (`models/`)**
-
-1. **YOLO Detector** (`yolo_detector.py`)
-   - YOLOv10m model for object detection
-   - Damage localization with bounding boxes
-   - Multi-class vehicle damage detection
-
-2. **LLaVA Analyzer** (`llava_analyzer.py`)
-   - Vision-language model integration
-   - Detailed damage description generation
-   - Context-aware analysis
-
-3. **Fraud Detector** (`fraud_detector.py`)
-   - Perceptual hash-based duplicate detection
-   - Qdrant vector similarity search
-   - EXIF metadata tampering detection
-   - Multi-layer fraud scoring
-
----
-
-## 🔧 Prerequisites
-
-### Required Software
-
-| Component | Version | Purpose |
-|-----------|---------|---------|
-| **Python** | 3.10+ | Runtime environment |
-| **Docker** | 20.10+ | Containerization (optional) |
-| **Docker Compose** | 2.0+ | Multi-container orchestration |
-| **Ollama** | Latest | LLaVA model runtime |
-| **Git** | Any | Version control |
-| **CUDA** | 11.8+ | GPU acceleration (optional) |
-
-### System Requirements
-
-#### Minimum Configuration
-- **CPU**: 4 cores
-- **RAM**: 8 GB
-- **Storage**: 20 GB free space
-- **OS**: Windows 10/11, Linux (Ubuntu 20.04+), macOS 12+
-
-#### Recommended Configuration
-- **CPU**: 8+ cores
-- **RAM**: 16 GB+
-- **GPU**: NVIDIA with 8GB+ VRAM (RTX 3060 or better)
-- **Storage**: 50 GB SSD
-- **OS**: Windows 11, Ubuntu 22.04, macOS 13+
-
-### Required Models
-
-1. **YOLOv10 Weights**: `yolov10m.pt` (already included)
-2. **LLaVA Model**: `llava:13b` (downloaded via Ollama)
-
----
-
-## 📦 Installation
-
-### Step 1: Clone Repository
-
-```bash
-git clone https://github.com/your-org/insurance-claim-validator.git
-cd insurance-claim-validator
-```
-
-### Step 2: Install Ollama
-
-#### Windows
-```powershell
-# Download from https://ollama.ai/download/windows
-# Or use winget
-winget install Ollama.Ollama
-```
-
-#### Linux
-```bash
-curl -fsSL https://ollama.ai/install.sh | sh
-```
-
-#### macOS
-```bash
-brew install ollama
-```
-
-### Step 3: Pull LLaVA Model
-
-```bash
-ollama pull llava:13b
-```
-
-**Note**: This downloads ~8GB. Ensure stable internet connection.
-
-### Step 4: Install Python Dependencies
-
-#### Using Virtual Environment (Recommended)
-
-```bash
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# Windows:
-venv\Scripts\activate
-# Linux/macOS:
-source venv/bin/activate
-
-# Install dependencies
-cd ml-backend
-pip install -r requirements.txt
-```
-
-#### For GPU Support
-
-```bash
-pip install -r requirements_gpu.txt
-```
-
-### Step 5: Download YOLO Model (if not included)
-
-```bash
-python download_models.py
+├── backend/                          # Node.js / Express API Gateway
+│   ├── package.json                  # Express dependencies, Mongoose, Multer, JWT
+│   ├── check_status.ps1              # PowerShell diagnostic utility for backend services
+│   ├── test_integration.ps1          # Automated API test script
+│   └── src/
+│       ├── server.js                 # Express server bootstrap, DB connection & route mounting
+│       ├── models/
+│       │   ├── Claim.js              # Mongoose schema for persistent claims and AI verdicts
+│       │   └── User.js               # Mongoose schema for user accounts and authentication
+│       └── routes/
+│           ├── auth.js               # User registration, login, and JWT token issuance
+│           └── claims.js             # Claim submission, status retrieval, and ML proxy routing
+│
+└── ml-backend/                       # Python FastAPI Machine Learning & Vision Service
+    ├── Dockerfile                    # Containerization specification for Python ML service
+    ├── requirements.txt              # Standard CPU/development Python dependencies
+    ├── requirements_gpu.txt          # GPU-accelerated dependencies (CUDA, bitsandbytes)
+    ├── download_models.py            # Automated downloader for YOLO model weights
+    ├── inject_metadata.py            # Utility for testing EXIF metadata injection
+    ├── app/
+    │   ├── __init__.py
+    │   ├── main.py                   # FastAPI application initialization & route definitions
+    │   ├── api/
+    │   │   └── routes.py             # Extended API routers for inspection jobs
+    │   ├── models/
+    │   │   ├── yolo_detector.py      # Ultralytics YOLOv10 wrapper for damage localization
+    │   │   ├── llava_analyzer.py     # LLaVA 13B VLM integration via Ollama
+    │   │   └── fraud_detector.py     # Perceptual hash + Qdrant similarity fraud detector
+    │   ├── services/
+    │   │   ├── preprocessing.py      # Image normalization, resizing, and quality evaluation
+    │   │   ├── video_processor.py    # Walk-around video decoder, blur rejection, keyframing
+    │   │   ├── detection_service.py  # Orchestrator combining YOLO, LLaVA, and fraud checks
+    │   │   ├── metadata_extractor.py # EXIF parser for GPS, timestamp, and device fingerprint
+    │   │   └── scoring_engine.py     # Multi-variable weighted decision algorithm
+    │   └── utils/
+    │       ├── image_utils.py        # Bounding box drawing and base64 converters
+    │       └── prompt_templates.py   # Structured domain prompts for LLaVA reasoning
+    └── data/
+        └── test_videos/              # Sample test video clips for pipeline validation
 ```
 
 ---
 
-## 🚀 Running the Project
-
-### Option 1: Docker Compose (Recommended)
-
-Docker Compose provides the easiest setup with all services configured automatically.
-
-#### Start All Services
-
-```bash
-docker-compose up -d
-```
-
-This starts:
-- **Qdrant** (Vector Database) on port 6333
-- **MongoDB** (Claims Database) on port 27017
-- **ML Backend** (FastAPI) on port 8000
-
-#### Check Service Status
-
-```bash
-docker-compose ps
-```
-
-#### View Logs
-
-```bash
-# All services
-docker-compose logs -f
-
-# Specific service
-docker-compose logs -f ml-backend
-```
-
-#### Stop Services
-
-```bash
-docker-compose down
-```
-
-#### Access Points
-
-- **API**: http://localhost:8000
-- **API Docs**: http://localhost:8000/docs
-- **Qdrant Dashboard**: http://localhost:6333/dashboard
-- **Health Check**: http://localhost:8000/health
-
----
-
-### Option 2: Manual Setup
-
-For development or when Docker is not available.
-
-#### Step 1: Start Qdrant (Vector Database)
-
-**Using Docker:**
-```bash
-docker run -p 6333:6333 -p 6334:6334 \
-  -v $(pwd)/ml-backend/data/qdrant_storage:/qdrant/storage \
-  qdrant/qdrant
-```
-
-**Using Qdrant Standalone:**
-```bash
-# Download from https://qdrant.tech/documentation/quick-start/
-./qdrant
-```
-
-#### Step 2: Start MongoDB (Optional)
-
-```bash
-docker run -d -p 27017:27017 \
-  -v $(pwd)/ml-backend/data/mongodb:/data/db \
-  --name mongodb \
-  mongo:latest
-```
-
-#### Step 3: Start Ollama Service
-
-```bash
-# Start Ollama server
-ollama serve
-```
-
-**Verify LLaVA model:**
-```bash
-ollama list
-```
-
-#### Step 4: Configure Environment
-
-Create `.env` file in `ml-backend/` directory:
-
-```env
-# Qdrant Configuration
-USE_QDRANT=true
-QDRANT_HOST=localhost
-QDRANT_PORT=6333
-
-# Ollama Configuration
-OLLAMA_HOST=http://localhost:11434
-
-# MongoDB Configuration (Optional)
-MONGODB_URI=mongodb://localhost:27017/insurance_claims
-
-# Application Settings
-DEBUG=false
-LOG_LEVEL=INFO
-```
-
-#### Step 5: Start FastAPI Server
-
-```bash
-cd ml-backend
-python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-**Output:**
-```
-INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-INFO:     Started reloader process [12345] using WatchFiles
-INFO:     Started server process [12346]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-```
-
-#### Verify Installation
-
-```bash
-# Test health endpoint
-curl http://localhost:8000/health
-
-# Expected response:
-{
-  "status": "healthy",
-  "timestamp": "2025-12-17T10:30:00",
-  "services": {
-    "preprocessing": "✓",
-    "yolo_detection": "✓",
-    "llava_analysis": "✓",
-    "fraud_detection": "✓",
-    "scoring_engine": "✓"
-  }
-}
-```
-
----
-
-## 📚 API Documentation
-
-### Interactive API Documentation
-
-Once the server is running, access the auto-generated documentation:
-
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
-
-### Core Endpoints
-
-#### 1. Analyze Claim (Main Endpoint)
-
-**Endpoint:** `POST /api/analyze-claim`
-
-**Description:** Submits a claim image for complete analysis including damage detection, fraud checks, and automated decision.
-
-**Request:**
-```bash
-curl -X POST "http://localhost:8000/api/analyze-claim" \
-  -F "image=@path/to/damage_photo.jpg" \
-  -F "claim_date=2025-12-15" \
-  -F "claim_description=Front bumper damaged in parking lot accident" \
-  -F "claim_location=New York, NY" \
-  -F "policy_id=POL-2025-001"
-```
-
-**Response:**
-```json
-{
-  "job_id": "claim_abc123def456",
-  "status": "completed",
-  "decision": "APPROVE",
-  "confidence_score": 8.5,
-  "processing_time_seconds": 12.3,
-  "fraud_indicators": {
-    "overall_score": 2.5,
-    "metadata_score": 1.0,
-    "duplicate_score": 0.0,
-    "consistency_score": 1.5,
-    "is_duplicate": false,
-    "suspicious_factors": []
-  },
-  "damage_detection": {
-    "detections": [
-      {
-        "class": "dent",
-        "confidence": 0.89,
-        "bbox": [120, 45, 280, 190]
-      }
-    ],
-    "total_detections": 1,
-    "annotated_image_path": "/api/annotated-image/claim_abc123def456.jpg"
-  },
-  "damage_analysis": {
-    "severity": "moderate",
-    "description": "Front bumper shows a dent approximately 6 inches wide...",
-    "estimated_cost_range": "$500-$1500"
-  },
-  "recommendation": {
-    "action": "APPROVE",
-    "reason": "Low fraud risk with consistent damage evidence",
-    "confidence": 8.5,
-    "next_steps": ["Process claim payment", "Schedule repair appointment"]
-  },
-  "report": {
-    "summary": "Claim approved with high confidence...",
-    "detailed_explanation": "...",
-    "generated_at": "2025-12-17T10:35:22"
-  }
-}
-```
-
-#### 2. Get Specific Claim
-
-**Endpoint:** `GET /api/claim/{job_id}`
-
-**Description:** Retrieves analysis results for a specific claim.
-
-```bash
-curl http://localhost:8000/api/claim/claim_abc123def456
-```
-
-#### 3. List All Claims
-
-**Endpoint:** `GET /api/claims`
-
-**Description:** Returns a list of all processed claims.
-
-```bash
-curl http://localhost:8000/api/claims
-```
-
-**Response:**
-```json
-{
-  "total_claims": 42,
-  "claims": [
-    {
-      "job_id": "claim_abc123def456",
-      "timestamp": "2025-12-17T10:35:22",
-      "decision": "APPROVE",
-      "fraud_score": 2.5
-    }
-  ]
-}
-```
-
-#### 4. Health Check
-
-**Endpoint:** `GET /health`
-
-**Description:** Checks system health and service availability.
-
-```bash
-curl http://localhost:8000/health
-```
-
-#### 5. Get Annotated Image
-
-**Endpoint:** `GET /api/annotated-image/{filename}`
-
-**Description:** Downloads the annotated image with bounding boxes.
-
-```bash
-curl http://localhost:8000/api/annotated-image/claim_abc123def456.jpg -o annotated.jpg
-```
-
----
-
-## ⚙️ Configuration
-
-### Environment Variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `USE_QDRANT` | `true` | Enable Qdrant vector database |
-| `QDRANT_HOST` | `localhost` | Qdrant server hostname |
-| `QDRANT_PORT` | `6333` | Qdrant server port |
-| `OLLAMA_HOST` | `http://localhost:11434` | Ollama API endpoint |
-| `MONGODB_URI` | `None` | MongoDB connection string (optional) |
-| `DEBUG` | `false` | Enable debug logging |
-| `LOG_LEVEL` | `INFO` | Logging level (DEBUG/INFO/WARNING/ERROR) |
-
-### Fraud Detection Tuning
-
-Edit `ml-backend/app/services/scoring_engine.py` to adjust thresholds:
-
-```python
-# Decision thresholds
-APPROVAL_THRESHOLD = 3.0      # Max fraud score for auto-approval
-REJECTION_THRESHOLD = 7.0     # Min fraud score for auto-rejection
-CONSISTENCY_MIN = 7.0         # Min consistency for approval
-
-# Scoring weights
-METADATA_WEIGHT = 0.3         # 30% weight
-DUPLICATE_WEIGHT = 0.4        # 40% weight
-CONSISTENCY_WEIGHT = 0.3      # 30% weight
-```
-
-### YOLO Detection Parameters
-
-Modify detection sensitivity in `ml-backend/app/models/yolo_detector.py`:
-
-```python
-self.confidence_threshold = 0.25  # Detection confidence threshold
-self.iou_threshold = 0.45         # Non-max suppression threshold
-```
-
----
-
-## 🧪 Testing
-
-### Run Complete Test Suite
-
-```bash
-cd ml-backend
-python test_complete_pipeline.py
-```
-
-### Run Individual Tests
-
-```bash
-# Test YOLO detection
-python test_detection.py
-
-# Test fraud detection
-python test_fraud_detection.py
-
-# Test preprocessing
-python test_preprocessing.py
-
-# Test LLaVA analysis
-python test_ollama_llava.py
-```
-
-### Using Postman
-
-1. Import the API schema from http://localhost:8000/openapi.json
-2. Create a new request to `POST http://localhost:8000/api/analyze-claim`
-3. Set request type to `form-data`
-4. Add required fields and upload test image from `ml-backend/test_images/`
-
-### Sample Test Images
-
-The `ml-backend/test_images/` directory contains sample images for testing various scenarios:
-- Vehicle damage (dents, scratches, broken parts)
-- Different lighting conditions
-- Various angles and perspectives
+## 🔬 Core AI/ML Capabilities
+
+### 1. Walk-Around Video Keyframe Decimation & Blur Filtering
+When claimants walk around a vehicle, handheld recording inevitably introduces motion blur and redundant frames.
+- **Frame Sampling**: The `VideoProcessor` captures video at calibrated intervals (e.g., 1 frame per second).
+- **Laplacian Blur Rejection**: Evaluates frame sharpness via the variance of the Laplacian:
+  $$\text{Var}(\nabla^2 I) < \theta_{\text{blur}}$$
+  Any frame failing the sharpness threshold is immediately discarded.
+- **Keyframe Ranking**: Evaluates contrast, luminance, and information entropy to prioritize the top candidate keyframes for downstream AI inference.
+
+### 2. YOLOv10 Damage Detection & Localization
+- High-throughput vehicle damage detection identifying classes such as:
+  - `dent`
+  - `scratch`
+  - `crack` / `broken glass`
+  - `bumper damage`
+  - `door panel deformation`
+- Generates precise normalized bounding boxes `[x1, y1, x2, y2]` along with detection confidence scores.
+- Renders visual inspection overlays saved for claim adjusters.
+
+### 3. LLaVA 13B Visual Reasoning Engine
+- Uses large multimodal vision-language modeling via local Ollama inference.
+- Evaluates damage severity on a structured scale: **Minor**, **Moderate**, **Severe**, or **Total Loss**.
+- Validates whether the claimant's narrative matches the physical evidence (e.g., distinguishing between a slow parking scraping vs. a high-speed collision impact).
+- Predicts preliminary labor operations (repair vs. panel replacement) and itemized cost ranges.
+
+### 4. Multi-Layer Fraud Detection Engine
+- **Vector Embeddings via Qdrant**: Calculates dense visual embeddings and compares them against millions of previously filed claims to catch syndicated or re-used images.
+- **Perceptual Image Hashing**: Evaluates Hamming distance across Difference Hash (`dHash`) and Perceptual Hash (`pHash`) to flag cropped, tinted, or manipulated images.
+- **EXIF Metadata Forensics**: Flags missing timestamps, digital manipulation software signatures (Photoshop, GIMP), or GPS coordinates inconsistent with the reported accident location.
+
+### 5. Automated Decision & Scoring Engine
+Aggregates independent risk vectors into a standardized score ($0.0$ to $10.0$):
+$$\text{Score} = w_{\text{dup}} \cdot S_{\text{duplicate}} + w_{\text{meta}} \cdot S_{\text{metadata}} + w_{\text{cons}} \cdot S_{\text{inconsistency}}$$
+
+- **Score $< 3.0$**: **APPROVE** (Low fraud risk, verified physical damage, consistent metadata).
+- **Score $3.0 - 6.9$**: **MANUAL REVIEW** (Ambiguous damage or minor metadata discrepancies).
+- **Score $\ge 7.0$**: **REJECT** (High probability of fraud, duplicate image match, or synthetic evidence).
 
 ---
 
 ## 🛠️ Technology Stack
 
-### Full Technology Stack
-
-| **Technology** | **Version** | **Category** | **Purpose** |
-|----------------|-------------|--------------|-------------|
-| **Frontend** |
-| React | 19.2.3 | Framework | UI Framework for building interactive interfaces |
-| React Router DOM | 7.11.0 | Routing | Client-side navigation and routing |
-| Tailwind CSS | 3.4.19 | Styling | Utility-first CSS framework |
-| Lucide React | 0.562.0 | UI Components | Icon library for modern UI |
-| Recharts | 3.6.0 | Visualization | Chart library for analytics dashboard |
-| Axios | 1.13.2 | HTTP Client | API communication |
-| **Backend (Node.js)** |
-| Express.js | 4.18.2 | Web Framework | RESTful API server |
-| MongoDB | 8.0.0 | Database | NoSQL database for claims storage |
-| Mongoose | 8.0.0 | ODM | MongoDB object modeling |
-| JWT | 9.0.2 | Authentication | Secure token-based authentication |
-| Bcrypt.js | 2.4.3 | Security | Password hashing |
-| Multer | 1.4.5 | File Upload | Multipart form data handling |
-| CORS | 2.8.5 | Middleware | Cross-origin resource sharing |
-| **ML Backend (Python)** |
-| FastAPI | Latest | Web Framework | High-performance API for ML services |
-| Uvicorn | Latest | ASGI Server | Production-grade async server |
-| PyTorch | Latest | Deep Learning | Neural network framework |
-| Transformers | Latest | NLP/Vision | Hugging Face model library |
-| Ultralytics YOLOv10 | Latest | Object Detection | Real-time damage detection |
-| LLaVA 13B | 13B | Vision-Language Model | Multimodal damage analysis |
-| OpenCV | Latest | Image Processing | Computer vision operations |
-| Pillow (PIL) | Latest | Image Handling | Image manipulation and EXIF extraction |
-| NumPy | Latest | Numerical Computing | Array operations and computations |
-| Bitsandbytes | Latest | Optimization | 4-bit/8-bit quantization for efficiency |
-| Accelerate | Latest | Model Optimization | Distributed training and inference |
-| ImageHash | Latest | Fraud Detection | Perceptual image hashing |
-| Qdrant | Latest | Vector Database | Similarity search and embeddings |
-| ExifRead | Latest | Metadata Extraction | EXIF data parsing from images |
-| Pydantic | Latest | Data Validation | Request/response schema validation |
-| **DevOps & Tools** |
-| Docker | Latest | Containerization | Application containerization |
-| Docker Compose | Latest | Orchestration | Multi-container orchestration |
-| Nodemon | 3.0.1 | Development | Auto-restart for Node.js |
-| dotenv | 16.3.1 | Configuration | Environment variable management |
-| Ollama | Latest | Model Serving | Local LLM/VLM inference engine |
-
-### AI/ML Models
-
-| **Model** | **Type** | **Purpose** | **Size** |
-|-----------|----------|-------------|----------|
-| YOLOv10m | Object Detection | Vehicle damage detection | Medium (yolov10m.pt) |
-| LLaVA | Vision-Language Model | Multimodal damage analysis | 13B parameters |
-
-### Key Technology Highlights
-
-- **Modern Stack**: React 19 + FastAPI for high performance
-- **AI-Powered**: YOLOv10 + LLaVA for intelligent claim validation
-- **Secure**: JWT authentication, bcrypt password hashing
-- **Scalable**: Docker containerization, microservices architecture
-- **Efficient**: Qdrant vector DB for fraud detection, quantization for model optimization
+| Layer | Technologies | Description |
+|---|---|---|
+| **Frontend** | React 18, Tailwind CSS, Lucide Icons, Axios | Responsive single-page application with real-time analysis updates |
+| **Backend Gateway** | Node.js, Express, Mongoose, Multer, JWT | Secure RESTful API gateway, authentication, and file streaming |
+| **ML Inference** | Python 3.10+, FastAPI, Uvicorn | Async high-performance vision processing microservice |
+| **Vision Models** | Ultralytics YOLOv10, LLaVA 13B (Ollama) | Real-time object localization and multimodal visual reasoning |
+| **Image & Video Ops**| OpenCV (`cv2`), Pillow, ImageHash, ExifRead | Blur filtering, frame extraction, perceptual hashing, EXIF parsing |
+| **Databases** | Qdrant (Vector DB), MongoDB (Document Store) | Visual embedding search and persistent claim data storage |
+| **DevOps & Containers** | Docker, Docker Compose | Reproducible multi-service deployment |
 
 ---
 
-## ⚡ Performance
+## 💻 Prerequisites & System Requirements
 
-### Benchmarks
+### Hardware Requirements
+- **CPU**: 4 cores minimum (8+ cores recommended)
+- **RAM**: 8 GB minimum (16 GB+ recommended for local LLaVA 13B execution)
+- **GPU (Optional)**: NVIDIA GPU with 8GB+ VRAM (RTX 3060 / T4 or better) for GPU-accelerated inference. CPU mode is also supported.
+- **Disk**: 25 GB free disk space (for Docker images and model weights)
 
-| Metric | Value | Notes |
-|--------|-------|-------|
-| **Average Processing Time** | 8-15 seconds | Full pipeline per image |
-| **YOLO Detection** | 0.5-1 second | GPU: 0.2s, CPU: 1s |
-| **LLaVA Analysis** | 5-10 seconds | Depends on prompt complexity |
-| **Fraud Detection** | 1-2 seconds | With Qdrant enabled |
-| **Throughput** | 200-300 claims/hour | Single instance |
-| **Memory Usage** | 4-8 GB | Without GPU caching |
+### Software Requirements
+- [Git](https://git-scm.com/)
+- [Node.js](https://nodejs.org/) (v18.0 or newer) & npm
+- [Python](https://www.python.org/) (v3.10 or newer)
+- [Docker & Docker Compose](https://www.docker.com/)
+- [Ollama](https://ollama.ai/) (for running LLaVA 13B locally)
 
-### Optimization Tips
+---
 
-1. **Use GPU Acceleration**
+## 🚀 Getting Started
+
+### Option 1: Docker Compose (All-in-One)
+
+The quickest method to spin up Qdrant, MongoDB, and the ML Backend:
+
+1. **Clone the repository:**
    ```bash
-   pip install -r requirements_gpu.txt
+   git clone https://github.com/Kamraanmulani/InsureAutoAI.git
+   cd InsureAutoAI
    ```
 
-2. **Enable Model Caching**
-   - LLaVA model stays in memory after first load
-   - YOLO model cached on initialization
+2. **Start supporting services via Docker Compose:**
+   ```bash
+   docker-compose up -d
+   ```
+   This initiates:
+   - **Qdrant Vector Database**: `http://localhost:6333`
+   - **MongoDB**: `localhost:27017`
+   - **ML Backend Service**: `http://localhost:8000`
 
-3. **Batch Processing**
-   - Process multiple claims in parallel
-   - Use async/await for I/O operations
-
-4. **Scale Horizontally**
-   - Run multiple FastAPI instances behind load balancer
-   - Share Qdrant and MongoDB across instances
+3. **Verify running containers:**
+   ```bash
+   docker-compose ps
+   ```
 
 ---
 
-## 🔧 Troubleshooting
+### Option 2: Local Multi-Service Development
 
-### Common Issues
+To run each tier individually for active development:
 
-#### 1. Ollama Connection Error
-
-**Error:** `Failed to connect to Ollama at http://localhost:11434`
-
-**Solution:**
+#### 1. Setup Ollama (Vision-Language Runtime)
 ```bash
-# Check if Ollama is running
+# Install Ollama and pull LLaVA 13B
+ollama pull llava:13b
+
+# Start the Ollama server
 ollama serve
-
-# Verify model is pulled
-ollama list
-
-# Test directly
-ollama run llava:13b "Describe this image"
 ```
 
-#### 2. Qdrant Connection Failed
-
-**Error:** `Cannot connect to Qdrant at localhost:6333`
-
-**Solution:**
+#### 2. Setup & Run ML Backend (FastAPI - Port 8000)
 ```bash
-# Check if Qdrant is running
-docker ps | grep qdrant
-
-# Restart Qdrant
-docker-compose restart qdrant
-
-# Check Qdrant health
-curl http://localhost:6333/health
-```
-
-#### 3. CUDA Out of Memory
-
-**Error:** `RuntimeError: CUDA out of memory`
-
-**Solution:**
-```python
-# In requirements.txt, use CPU-only versions
-# Or reduce batch size
-# Or use smaller models (llava:7b instead of llava:13b)
-```
-
-#### 4. Module Not Found Error
-
-**Error:** `ModuleNotFoundError: No module named 'app'`
-
-**Solution:**
-```bash
-# Run from ml-backend directory
 cd ml-backend
-python -m uvicorn app.main:app --reload
 
-# Or set PYTHONPATH
-export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-```
-
-#### 5. Port Already in Use
-
-**Error:** `Address already in use: 8000`
-
-**Solution:**
-```bash
-# Find process using port
+# Create and activate virtual environment
+python -m venv venv
 # Windows:
-netstat -ano | findstr :8000
-
+.\venv\Scripts\activate
 # Linux/macOS:
-lsof -i :8000
+source venv/bin/activate
 
-# Kill process or use different port
-python -m uvicorn app.main:app --port 8001
+# Install dependencies (CPU or GPU)
+pip install -r requirements.txt
+# For CUDA acceleration: pip install -r requirements_gpu.txt
+
+# Download YOLO weights if not present
+python download_models.py
+
+# Launch FastAPI server
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
+Verify the ML service at `http://localhost:8000/docs` or `http://localhost:8000/health`.
+
+#### 3. Setup & Run Backend Gateway (Node.js/Express - Port 5000)
+```bash
+cd ../backend
+
+# Install npm dependencies
+npm install
+
+# Start Express in development mode
+npm run dev
+# Or start directly:
+node src/server.js
+```
+The gateway will run on `http://localhost:5000`.
+
+#### 4. Setup & Run Frontend (React - Port 3000)
+```bash
+cd ../frontend
+
+# Install dependencies
+npm install
+
+# Start React development server
+npm start
+```
+Open `http://localhost:3000` in your browser to access the InsureAutoAI interface.
+
+---
+
+## 📖 API Reference
+
+### FastAPI ML Service (`:8000`)
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | Health check verifying preprocessing, YOLO, LLaVA, Qdrant & scoring engines |
+| `POST` | `/api/analyze-claim` | Processes single or multi-photo vehicle damage claims |
+| `POST` | `/api/analyze-claim-video` | Decodes walk-around video, extracts sharp keyframes & performs aggregated damage analysis |
+| `GET` | `/api/claim/{job_id}` | Retrieves full adjudication payload and score breakdown for a specific job |
+| `GET` | `/api/claims` | Lists all in-memory processed claims |
+| `GET` | `/api/annotated-image/{job_id}` | Serves the annotated image with YOLO bounding boxes |
+
+#### Sample Request (`/api/analyze-claim-video`):
+```bash
+curl -X POST "http://localhost:8000/api/analyze-claim-video" \
+  -F "video=@test_walkaround.mp4" \
+  -F "claim_date=2026-10-15" \
+  -F "claim_description=Vehicle sideswiped while parked in shopping lot" \
+  -F "claim_location=San Francisco, CA" \
+  -F "policy_id=POL-94821"
+```
+
+---
+
+### Express Backend Gateway (`:5000`)
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | Gateway status and MongoDB connection verification |
+| `POST` | `/api/auth/register` | Register a new user or adjuster account |
+| `POST` | `/api/auth/login` | Authenticate and obtain JWT bearer token |
+| `POST` | `/api/claims/analyze` | Accepts video or photo files, streams to ML service, and records claim in MongoDB |
+| `GET` | `/api/claims` | Fetch all historical claims with search, filter, and pagination |
+| `GET` | `/api/claims/:id` | Fetch specific claim by Mongo database ID |
+| `GET` | `/api/claims/job/:jobId` | Fetch claim by unique analysis Job ID |
+| `GET` | `/api/claims/stats/dashboard` | Aggregated analytics (Total, Approved, Under Review, Rejected) |
+
+---
+
+## ⚙️ Environment Configuration
+
+Refer to [.env.template](.env.template) for default settings:
+
+```env
+# ==========================================
+# ML Backend Configuration (FastAPI)
+# ==========================================
+API_HOST=0.0.0.0
+API_PORT=8000
+API_RELOAD=true
+LOG_LEVEL=INFO
+
+# AI Models
+YOLO_MODEL_PATH=yolov10m.pt
+LLAVA_MODEL_NAME=llava:13b
+OLLAMA_HOST=http://localhost:11434
+
+# Vector DB & Storage
+USE_QDRANT=true
+QDRANT_HOST=localhost
+QDRANT_PORT=6333
+MONGODB_URI=mongodb://localhost:27017/insurance_claims
+
+# ==========================================
+# Backend API Gateway (Node.js/Express)
+# ==========================================
+PORT=5000
+ML_API_URL=http://localhost:8000
+JWT_SECRET=your_jwt_secret_key_here
+
+# ==========================================
+# Frontend Configuration (React)
+# ==========================================
+REACT_APP_API_URL=http://localhost:5000/api
+REACT_APP_ML_API_URL=http://localhost:8000
+```
+
+---
+
+## ❓ Troubleshooting & FAQ
+
+### 1. Ollama fails to connect (`http://localhost:11434`)
+- Confirm the Ollama daemon is running with `ollama serve`.
+- Ensure the model has been downloaded using `ollama pull llava:13b`.
+- Test model responsiveness with:
+  ```bash
+  ollama run llava:13b "Are you ready?"
+  ```
+
+### 2. Qdrant connection refused (`localhost:6333`)
+- Start Qdrant with `docker-compose up -d qdrant` or via Docker:
+  ```bash
+  docker run -p 6333:6333 -v ${PWD}/ml-backend/data/qdrant_storage:/qdrant/storage qdrant/qdrant
+  ```
+- Test connectivity: `curl http://localhost:6333/health`
+
+### 3. Out of Memory (OOM) during video processing
+- Handheld 4K videos can require substantial memory during decompression.
+- In `ml-backend/app/utils/video_processor.py`, adjust `max_keyframes` or increase sampling interval to process fewer frames.
+- If running on CPU, you can switch from `llava:13b` to `llava:7b` in your `.env` configuration.
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! Please follow these guidelines:
+We welcome community contributions to improve InsureAutoAI:
 
-### Development Setup
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature-name`
-3. Make your changes
-4. Run tests: `python test_complete_pipeline.py`
-5. Commit with clear messages: `git commit -m "Add: New fraud detection rule"`
-6. Push to your fork: `git push origin feature/your-feature-name`
-7. Submit a Pull Request
-
-### Code Style
-
-- Follow PEP 8 guidelines
-- Use type hints where possible
-- Add docstrings to all functions
-- Keep functions focused and modular
-
-### Testing Requirements
-
-- All new features must include tests
-- Maintain >80% code coverage
-- Ensure all existing tests pass
+1. Fork the repository.
+2. Create your feature branch: `git checkout -b feature/amazing-feature`.
+3. Commit your changes: `git commit -m 'feat: add amazing feature'`.
+4. Push to the branch: `git push origin feature/amazing-feature`.
+5. Open a Pull Request.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-## 📞 Support
-
-- **Documentation**: See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed technical docs
-- **Issues**: Report bugs via GitHub Issues
-- **Questions**: Contact the development team
-
----
-
-## 🎖️ Acknowledgments
-
-- **YOLOv10**: Ultralytics team for object detection framework
-- **LLaVA**: HAOTIAN LIU et al. for vision-language model
-- **Qdrant**: Qdrant team for vector database
-- **FastAPI**: Sebastián Ramírez for the excellent web framework
-- **Ollama**: Ollama team for simplified LLM deployment
-
----
-
-## 🗺️ Roadmap
-
-### Phase 1 (Completed ✅)
-- [x] Core damage detection system
-- [x] LLaVA integration for analysis
-- [x] Fraud detection layer
-- [x] Scoring engine
-- [x] RESTful API
-
-### Phase 2 (In Progress 🚧)
-- [ ] Web dashboard UI
-- [ ] Real-time notifications
-- [ ] Multi-language support
-- [ ] Enhanced reporting
-
-### Phase 3 (Planned 📋)
-- [ ] Mobile applications
-- [ ] Blockchain integration for claim verification
-- [ ] Advanced ML model fine-tuning
-- [ ] Multi-claim batch processing
-- [ ] Integration with insurance management systems
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ---
 
 <div align="center">
-
-**Built with ❤️ for the insurance industry**
-
-[Report Bug](https://github.com/your-org/insurance-claim-validator/issues) · [Request Feature](https://github.com/your-org/insurance-claim-validator/issues) · [Documentation](https://github.com/your-org/insurance-claim-validator/wiki)
-
+  <b>Built for faster, fairer, and fraud-resistant automotive insurance claims.</b><br/>
+  <sub>Developed by <a href="https://github.com/Kamraanmulani">Kamraan Mulani</a></sub>
 </div>
